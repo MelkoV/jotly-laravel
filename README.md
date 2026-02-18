@@ -1,10 +1,6 @@
 # jotly-laravel
 Laravel backend project for jotly
 
-## Before first run
-
-`docker run --rm --interactive --tty --volume $PWD:/app composer install`
-
 ## Run
 
 Copy .env.example to .env, edit it and run `docker-compose up -d`
