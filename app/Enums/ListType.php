@@ -6,7 +6,10 @@ namespace App\Enums;
 
 enum ListType: string
 {
-    case SHOPPING = 'shopping';
-    case TODO = 'todo';
-    case TEMPLATE = 'template';
+    /** Список покупок */
+    case Shopping = 'shopping';
+    /** Список дел/задач */
+    case Todo = 'todo';
+    /** Шаблон для вновь создаваемых списков */
+    case Template = 'template';
 }

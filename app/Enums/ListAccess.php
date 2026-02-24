@@ -6,8 +6,12 @@ namespace App\Enums;
 
 enum ListAccess: int
 {
-    case PRIVATE = 1;
-    case CAN_EDIT = 2;
-    case INVITE = 4;
-    case LINK = 8;
+    /** Приватный список. По умолчанию. */
+    case Private = 1;
+    /** Участники, имеющие доступ к списку, могут редактировать. Не распространяется на владельца. */
+    case CanEdit = 2;
+    /** Владелец списка может приглашать новых участников (по email). */
+    case Invite = 4;
+    /** Доступ к списку по прямой ссылке. */
+    case Link = 8;
 }

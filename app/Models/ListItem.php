@@ -39,7 +39,6 @@ class ListItem extends Model
 
     protected $casts = [
         'completed_at' => 'datetime',
-        'data' => 'json'
     ];
 
     protected $fillable = [

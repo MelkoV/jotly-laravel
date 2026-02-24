@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ListType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -44,7 +45,8 @@ class Lists extends Model
 
     protected $casts = [
         'access' => 'int',
-        'touched_at' => 'datetime'
+        'touched_at' => 'datetime',
+        'type' => ListType::class,
     ];
 
     protected $fillable = [

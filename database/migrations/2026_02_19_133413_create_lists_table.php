@@ -30,11 +30,11 @@ return new class extends Migration
         Schema::create('lists', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('description')->nullable();
             $table->string('short_url')->unique();
             $table->enum('type', array_column(\App\Enums\ListType::cases(), 'value'));
             $table->foreignUuid('owner_id')->constrained('users');
-            $table->integer('access')->default(\App\Enums\ListAccess::PRIVATE->value);
+            $table->integer('access')->default(\App\Enums\ListAccess::Private->value);
             $table->softDeletes();
             $table->timestamps();
             $table->timestamp('touched_at')->default(DB::raw('NOW()'));
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained('users');
             $table->foreignUuid('product_id')->nullable()->constrained('users');
             $table->string('name')->nullable();
-            $table->text('description')->nullable();
+            $table->string('description')->nullable();
             $table->integer('version')->default(1);
             $table->boolean('completed')->default(false);
             $table->timestamp('completed_at')->nullable();

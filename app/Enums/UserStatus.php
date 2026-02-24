@@ -6,6 +6,6 @@ namespace App\Enums;
 
 enum UserStatus: string
 {
-    case ACTIVE = 'active';
-    case BLOCKED = 'blocked';
+    case Active = 'active';
+    case Blocked = 'blocked';
 }

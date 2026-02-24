@@ -6,7 +6,7 @@ namespace App\Enums;
 
 enum UserDevice: string
 {
-    case WEB = 'web';
-    case ANDROID = 'android';
-    case IOS = 'ios';
+    case Web = 'web';
+    case Android = 'android';
+    case Ios = 'ios';
 }

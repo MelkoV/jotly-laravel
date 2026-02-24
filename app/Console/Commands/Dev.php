@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Enums\ProductUnit;
+use App\Models\ListItem;
+use App\Models\Lists;
+use App\Models\ShoppingListItem;
+use App\Models\User;
+use Illuminate\Console\Command;
+
+class Dev extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:dev';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
+    {
+        return 0;
+    }
+}
