@@ -20,3 +20,9 @@ Standard: PSR12
 `./vendor/bin/phpcs /var/www/html/app`
 
 `./vendor/bin/phpcbf /var/www/html/app`
+
+## Swagger
+
+`php artisan swagger:push-documentation` after tests
+
+Swagger UI: http://localhost:8080/doc (or another port from .env)
