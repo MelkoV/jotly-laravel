@@ -6,5 +6,4 @@ namespace App\Exceptions;
 
 class UserNotFoundException extends RecordNotFoundException
 {
-
 }

@@ -11,10 +11,10 @@ use Spatie\LaravelData\Data;
 final class JwtTokenData extends Data
 {
     public function __construct(
-        public readonly string       $userId,
+        public readonly string $userId,
         public readonly JwtTokenType $type,
-        public readonly int          $time = 3600,
-        public readonly ?string      $jti = null,
+        public readonly int $time = 3600,
+        public readonly ?string $jti = null,
     ) {
     }
 

@@ -6,6 +6,7 @@ namespace App\Http\API\v1\Requests\User;
 
 use App\Data\User\SignUpData;
 use App\Enums\UserDevice;
+use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Validation\Rule;
 
 /**
@@ -20,6 +21,9 @@ use Illuminate\Validation\Rule;
  */
 class SignUpRequest extends \Illuminate\Foundation\Http\FormRequest
 {
+    /**
+     * @return array<string, list<string|object>>
+     */
     public function rules(): array
     {
         return [

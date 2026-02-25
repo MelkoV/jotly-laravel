@@ -25,6 +25,6 @@ class Dev extends Command
      */
     public function handle(): int
     {
-
+        return 0;
     }
 }

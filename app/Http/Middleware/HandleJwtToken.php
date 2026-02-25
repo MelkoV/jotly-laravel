@@ -30,7 +30,11 @@ class HandleJwtToken
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $tokenData = $this->decodeToken($request->bearerToken());
+            $bearerToken = $request->bearerToken();
+            if (!$bearerToken) {
+                throw new JwtException('Bearer token is required.');
+            }
+            $tokenData = $this->decodeToken($bearerToken);
             $user = User::query()->where('id', $tokenData->userId)->where('status', UserStatus::Active)->first();
             if (!$user) {
                 throw new JwtException('User not found');

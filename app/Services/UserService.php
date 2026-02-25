@@ -6,9 +6,12 @@ namespace App\Services;
 
 use App\Contracts\Repositories\UserRepositoryContract;
 use App\Contracts\Services\UserServiceContract;
+use App\Data\User\SignInData;
 use App\Data\User\SignUpData;
 use App\Data\User\UserData;
 use App\Enums\UserDevice;
+use App\Exceptions\UserNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class UserService implements UserServiceContract
 {
@@ -21,17 +24,29 @@ class UserService implements UserServiceContract
     {
         $user = $this->userRepository->create($data);
         $this->attachDevice($user, $data->device);
-        // @TODO get user avatar by email
+        // @TODO fetch user avatar by email
         // @TODO send confirmation email
         return $user;
     }
 
-    public function signIn(): UserData
+    /**
+     * @param SignInData $data
+     * @return UserData
+     * @throws UserNotFoundException
+     */
+    public function signIn(SignInData $data): UserData
     {
-
+        if (!Auth::attempt($data->toAttemptArray())) {
+            throw new UserNotFoundException();
+        }
+        $user = $this->userRepository->findById((string)Auth::id());
+        $this->attachDevice($user, $data->device);
+        // @TODO fetch user avatar by email
+        return $user;
     }
 
-    public function attachDevice(UserData $user, UserDevice $device, ?string $deviceId = null): void
+    // @TODO получать deviceId из запроса
+    public function attachDevice(UserData $user, UserDevice $device, string $deviceId = 'browser'): void
     {
         $this->userRepository->upsertDevice($user, $device, $deviceId);
     }

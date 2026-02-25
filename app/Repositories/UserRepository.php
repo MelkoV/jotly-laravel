@@ -17,13 +17,14 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UserRepository implements UserRepositoryContract
 {
-
     public function create(SignUpData $data): UserData
     {
-        $user = User::create([
+        /** @var array<string, mixed> $record */
+        $record = [
             ...$data->toArray(),
             'status' => UserStatus::Active,
-        ]);
+        ];
+        $user = User::create($record);
         return UserData::from($user);
     }
 
@@ -47,13 +48,16 @@ class UserRepository implements UserRepositoryContract
         return $this->findRecord($this->getBuilder()->where('email', $email));
     }
 
+    /**
+     * @return Builder<User>
+     */
     private function getBuilder(): Builder
     {
         return User::query()->select(['id', 'name', 'email', 'status', 'avatar']);
     }
 
     /**
-     * @param Builder $builder
+     * @param Builder<User> $builder
      * @return UserData
      * @throws UserNotFoundException
      */

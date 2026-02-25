@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Contracts\Services\JwtServiceContract;
 use App\Data\User\JwtTokenData;
 use App\Enums\JwtTokenType;
 use App\Exceptions\JwtException;
@@ -12,8 +13,8 @@ class UserTest extends TestCase
 {
     public function test_encode_and_decode_jwt_token(): void
     {
-        $service = new JwtService();
-        $encoded = JwtTokenData::from(['userId' => 'TestUserId', 'type' => JwtTokenType::Permanent]);
+        $service = resolve(JwtServiceContract::class);
+        $encoded = new JwtTokenData(userId: 'TestUserId', type: JwtTokenType::Permanent);
         $token = $service->encode($encoded);
         $decoded = $service->decode($token);
         $this->assertTrue($decoded->userId === $encoded->userId);
@@ -23,8 +24,8 @@ class UserTest extends TestCase
 
     public function test_decode_expired_jwt_token(): void
     {
-        $service = new JwtService();
-        $encoded = JwtTokenData::from(['userId' => 'TestUserId', 'type' => JwtTokenType::Permanent, 'time' => 1]);
+        $service = resolve(JwtServiceContract::class);
+        $encoded = new JwtTokenData(userId: 'TestUserId', type: JwtTokenType::Permanent, time: 1);
         $token = $service->encode($encoded);
         sleep(2);
         $this->expectException(JwtException::class);

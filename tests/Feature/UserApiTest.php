@@ -188,4 +188,145 @@ class UserApiTest extends TestCase
             ->missing('user')
         );
     }
+
+    public function test_sign_in_empty_data()
+    {
+        $response = $this->postJson('/api/v1/user/sign-in', []);
+        $response->assertUnprocessable();
+
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('errors', fn (AssertableJson $json) => $json
+                ->hasAll(['email.0', 'password.0', 'device.0'])
+            )
+            ->has('message')
+            ->missing('user')
+        );
+    }
+
+    public function test_sign_in_incorrect_device()
+    {
+        $email = time() . '@test.test';
+        $password = 'test1234';
+        $response = $this->postJson('/api/v1/user/sign-up', [
+            'email' => $email,
+            'password' => $password,
+            'repeat_password' => $password,
+            'name' => 'test',
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertOk();
+
+        $response = $this->postJson('/api/v1/user/sign-in', [
+            'email' => $email,
+            'password' => $password,
+            'device' => 'fake_device',
+        ]);
+        $response->assertUnprocessable();
+
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('errors', fn (AssertableJson $json) => $json
+                ->has('device.0')
+            )
+            ->has('message')
+            ->missing('user')
+        );
+    }
+
+    public function test_sign_in_correct_data()
+    {
+        $email = time() . '@test.test';
+        $password = 'test1234';
+        $response = $this->postJson('/api/v1/user/sign-up', [
+            'email' => $email,
+            'password' => $password,
+            'repeat_password' => $password,
+            'name' => 'test',
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertOk();
+
+        $response = $this->postJson('/api/v1/user/sign-in', [
+            'email' => $email,
+            'password' => $password,
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertOk();
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('user', fn (AssertableJson $json) => $json
+                ->hasAll(['id', 'email', 'name', 'status', 'avatar'])
+                ->where('email', $email)
+                ->where('name', 'test')
+                ->where('status', UserStatus::Active)
+                ->whereType('id', 'string')
+            )
+            ->whereType('token', 'string')
+            ->whereType('refreshToken', 'string')
+            ->missing('errors')
+        );
+    }
+
+    public function test_sign_in_incorrect_credentials()
+    {
+        $email = time() . '@test.test';
+        $password = 'test1234';
+        $response = $this->postJson('/api/v1/user/sign-up', [
+            'email' => $email,
+            'password' => $password,
+            'repeat_password' => $password,
+            'name' => 'test',
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertOk();
+
+        $response = $this->postJson('/api/v1/user/sign-in', [
+            'email' => $email,
+            'password' => 'incorrect',
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertUnprocessable();
+
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('errors', fn (AssertableJson $json) => $json
+                ->has('email.0')
+                ->missingAll(['password', 'device'])
+            )
+            ->has('message')
+            ->missing('user')
+        );
+    }
+
+    public function test_sign_in_blocked_user()
+    {
+        $email = time() . '@test.test';
+        $password = 'test1234';
+        $response = $this->postJson('/api/v1/user/sign-up', [
+            'email' => $email,
+            'password' => $password,
+            'repeat_password' => $password,
+            'name' => 'test',
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertOk();
+
+        $user = \App\Models\User::where('email', $email)->firstOrFail();
+        $user->status = UserStatus::Blocked;
+        $user->save();
+
+        $response = $this->postJson('/api/v1/user/sign-in', [
+            'email' => $email,
+            'password' => $password,
+            'device' => UserDevice::Web,
+        ]);
+        $response->assertUnprocessable();
+
+        $response->assertJson(fn (AssertableJson $json) => $json
+            ->has('errors', fn (AssertableJson $json) => $json
+                ->has('email.0')
+                ->missingAll(['password', 'device'])
+            )
+            ->has('message')
+            ->missing('user')
+        );
+    }
+
 }

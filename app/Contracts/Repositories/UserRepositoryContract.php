@@ -34,6 +34,7 @@ interface UserRepositoryContract
     /**
      * @param UserData $data
      * @param UserDevice $device
+     * @param string|null $deviceId
      * @return void
      */
     public function upsertDevice(UserData $data, UserDevice $device, ?string $deviceId = null): void;

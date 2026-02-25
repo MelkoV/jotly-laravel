@@ -4,15 +4,32 @@ declare(strict_types=1);
 
 namespace App\Contracts\Services;
 
+use App\Data\User\SignInData;
 use App\Data\User\SignUpData;
 use App\Data\User\UserData;
 use App\Enums\UserDevice;
+use App\Exceptions\UserNotFoundException;
 
 interface UserServiceContract
 {
+    /**
+     * @param SignUpData $data
+     * @return UserData
+     */
     public function signUp(SignUpData $data): UserData;
 
-    public function signIn(): UserData;
+    /**
+     * @param SignInData $data
+     * @return UserData
+     * @throws UserNotFoundException
+     */
+    public function signIn(SignInData $data): UserData;
 
-    public function attachDevice(UserData $user, UserDevice $device, ?string $deviceId = null): void;
+    /**
+     * @param UserData $user
+     * @param UserDevice $device
+     * @param string $deviceId
+     * @return void
+     */
+    public function attachDevice(UserData $user, UserDevice $device, string $deviceId): void;
 }
