@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\DTO\ListItem\TodoData;
+use App\Data\ListItem\TodoData;
 
 /**
  * @property TodoData $data

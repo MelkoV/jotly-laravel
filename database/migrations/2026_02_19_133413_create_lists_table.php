@@ -58,7 +58,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('list_id')->constrained('lists');
             $table->foreignUuid('user_id')->constrained('users');
-            $table->foreignUuid('product_id')->nullable()->constrained('users');
+            $table->foreignUuid('product_id')->nullable()->constrained('products');
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->integer('version')->default(1);

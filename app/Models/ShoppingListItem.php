@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\DTO\ListItem\ShoppingData;
+use App\Data\ListItem\ShoppingData;
 
 /**
  * @property ShoppingData $data

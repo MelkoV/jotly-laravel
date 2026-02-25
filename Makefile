@@ -1,13 +1,22 @@
-.DEFAULT_GOAL := test
+.DEFAULT_GOAL := t
 
-test:
+t:
 	php artisan test
 
 stan:
 	./vendor/bin/phpstan analyse
 
-sniffer:
-	./vendor/bin/phpcs /var/www/html/app
+lint:
+	./vendor/bin/phpcs --standard=PSR12 /var/www/html/app
 
-fixer:
-	./vendor/bin/phpcbf /var/www/html/app
+fix:
+	./vendor/bin/phpcbf --standard=PSR12 /var/www/html/app
+
+doc:
+	php artisan swagger:push-documentation
+
+test: t doc
+
+check: stan lint
+
+ci: t stan lint

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\DTO\ListItem\ShoppingData;
-use App\DTO\ListItem\TodoData;
+use App\Data\ListItem\ShoppingData;
+use App\Data\ListItem\TodoData;
 use App\Enums\ProductUnit;
 use App\Enums\TodoPriority;
 use App\Models\ShoppingListItem;

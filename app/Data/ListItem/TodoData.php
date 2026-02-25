@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\ListItem;
+namespace App\Data\ListItem;
 
 use App\Enums\TodoPriority;
 use Carbon\Carbon;
