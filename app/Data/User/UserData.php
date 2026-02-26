@@ -14,7 +14,7 @@ final class UserData extends Data
         public readonly string $name,
         public readonly UserStatus $status,
         public readonly string $id,
-        public readonly ?string $avatar,
+        public readonly ?string $avatar = null,
     ) {
     }
 }

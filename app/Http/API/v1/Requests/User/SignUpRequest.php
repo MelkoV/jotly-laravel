@@ -28,10 +28,11 @@ class SignUpRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         return [
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'min:8', 'max:50', 'confirmed:repeat_password'],
-            'repeat_password' => ['required', 'min:8', 'max:50'],
+            'password' => ['required', 'string', 'min:8', 'max:50', 'confirmed:repeat_password'],
+            'repeat_password' => ['required', 'string', 'min:8', 'max:50'],
             'name' => ['required'],
             'device' => [Rule::enum(UserDevice::class), 'required'],
+            'device_id' => ['required', 'string', 'max:100'],
         ];
     }
 

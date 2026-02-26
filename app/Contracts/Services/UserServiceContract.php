@@ -32,4 +32,11 @@ interface UserServiceContract
      * @return void
      */
     public function attachDevice(UserData $user, UserDevice $device, string $deviceId): void;
+
+    /**
+     * @param string $userId
+     * @return UserData
+     * @throws UserNotFoundException
+     */
+    public function profile(string $userId): UserData;
 }

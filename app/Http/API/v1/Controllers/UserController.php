@@ -14,6 +14,8 @@ use App\Http\API\v1\Requests\User\SignInRequest;
 use App\Http\API\v1\Requests\User\SignUpRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 final class UserController extends Controller
@@ -24,13 +26,13 @@ final class UserController extends Controller
     ) {
     }
 
-    public function signUp(SignUpRequest $request): \Illuminate\Http\JsonResponse
+    public function signUp(SignUpRequest $request): JsonResponse
     {
         $user = $this->userService->signUp($request->toData());
         return $this->responseUserDataWithTokens($user);
     }
 
-    public function signIn(SignInRequest $request): \Illuminate\Http\JsonResponse
+    public function signIn(SignInRequest $request): JsonResponse
     {
         try {
             $user = $this->userService->signIn($request->toData());
@@ -43,25 +45,32 @@ final class UserController extends Controller
         return $this->responseUserDataWithTokens($user);
     }
 
-    /*public function refreshToken(Request $request)
+    /**
+     * @return JsonResponse
+     * @throws UserNotFoundException
+     */
+    public function refreshToken(): JsonResponse
     {
-
+        $userProfile = $this->userService->profile((string)Auth::id());
+        return $this->responseUserDataWithTokens($userProfile);
     }
 
-    public function profile()
+    /**
+     * @throws UserNotFoundException
+     */
+    public function profile(): UserData
     {
+        return $this->userService->profile((string)Auth::id());
+    }
 
-    }*/
-
-    private function responseUserDataWithTokens(UserData $user): \Illuminate\Http\JsonResponse
+    private function responseUserDataWithTokens(UserData $user): JsonResponse
     {
         return response()->json([
             'user' => $user,
             'token' => $this->jwtService->encode(
                 new JwtTokenData(
                     userId: $user->id,
-                    type:
-                    JwtTokenType::Temporary
+                    type: JwtTokenType::Temporary
                 )
             ),
             'refreshToken' => $this->jwtService->encode(

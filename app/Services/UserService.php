@@ -13,17 +13,17 @@ use App\Enums\UserDevice;
 use App\Exceptions\UserNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
-class UserService implements UserServiceContract
+readonly class UserService implements UserServiceContract
 {
     public function __construct(
-        private readonly UserRepositoryContract $userRepository,
+        private UserRepositoryContract $userRepository,
     ) {
     }
 
     public function signUp(SignUpData $data): UserData
     {
         $user = $this->userRepository->create($data);
-        $this->attachDevice($user, $data->device);
+        $this->attachDevice($user, $data->device, $data->device_id);
         // @TODO fetch user avatar by email
         // @TODO send confirmation email
         return $user;
@@ -40,14 +40,23 @@ class UserService implements UserServiceContract
             throw new UserNotFoundException();
         }
         $user = $this->userRepository->findById((string)Auth::id());
-        $this->attachDevice($user, $data->device);
+        $this->attachDevice($user, $data->device, $data->device_id);
         // @TODO fetch user avatar by email
         return $user;
     }
 
-    // @TODO получать deviceId из запроса
-    public function attachDevice(UserData $user, UserDevice $device, string $deviceId = 'browser'): void
+    public function attachDevice(UserData $user, UserDevice $device, string $deviceId): void
     {
         $this->userRepository->upsertDevice($user, $device, $deviceId);
+    }
+
+    /**
+     * @param string $userId
+     * @return UserData
+     * @throws UserNotFoundException
+     */
+    public function profile(string $userId): UserData
+    {
+        return $this->userRepository->findById($userId);
     }
 }

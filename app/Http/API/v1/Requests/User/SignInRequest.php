@@ -32,8 +32,9 @@ class SignInRequest extends \Illuminate\Foundation\Http\FormRequest
                 /** @var Exists $query */
                 $query->where('status', UserStatus::Active);
             })],
-            'password' => ['required', 'min:8', 'max:50'],
+            'password' => ['required', 'string', 'min:8', 'max:50'],
             'device' => [Rule::enum(UserDevice::class), 'required'],
+            'device_id' => ['required', 'string', 'max:100'],
         ];
     }
 

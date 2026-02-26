@@ -13,6 +13,7 @@ final class SignInData extends Data
         public readonly string $email,
         public readonly string $password,
         public readonly UserDevice $device,
+        public readonly string $device_id,
     ) {
     }
 

@@ -14,6 +14,7 @@ final class SignUpData extends Data
         public readonly string $password,
         public readonly string $name,
         public readonly UserDevice $device,
+        public readonly string $device_id,
     ) {
     }
 }
