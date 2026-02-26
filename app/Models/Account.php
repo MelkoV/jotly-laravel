@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $user_id
  * @property string $device
- * @property string|null $device_id
+ * @property string $device_id
  * @property Carbon $last_login_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

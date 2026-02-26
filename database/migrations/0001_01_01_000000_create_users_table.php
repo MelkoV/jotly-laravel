@@ -15,10 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
             $table->enum('status', array_column(\App\Enums\UserStatus::cases(), 'value'));
             $table->string('avatar')->nullable();
+            $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -27,9 +27,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users');
             $table->enum('device', array_column(\App\Enums\UserDevice::cases(), 'value'));
-            $table->string('device_id')->nullable();
+            $table->string('device_id');
             $table->timestamp('last_login_at')->default(DB::raw('NOW()'));
             $table->timestamps();
+            $table->unique(['user_id', 'device', 'device_id']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

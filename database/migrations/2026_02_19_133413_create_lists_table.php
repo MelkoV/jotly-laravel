@@ -21,8 +21,8 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->foreignUuid('category_id')->constrained('product_categories');
             $table->enum('unit', array_column(\App\Enums\ProductUnit::cases(), 'value'));
+            $table->foreignUuid('category_id')->constrained('product_categories');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,10 +31,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->string('short_url')->unique();
             $table->enum('type', array_column(\App\Enums\ListType::cases(), 'value'));
-            $table->foreignUuid('owner_id')->constrained('users');
+            $table->string('short_url')->unique();
             $table->integer('access')->default(\App\Enums\ListAccess::Private->value);
+            $table->foreignUuid('owner_id')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
             $table->timestamp('touched_at')->default(DB::raw('NOW()'));
@@ -56,9 +56,6 @@ return new class extends Migration
 
         Schema::create('list_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('list_id')->constrained('lists');
-            $table->foreignUuid('user_id')->constrained('users');
-            $table->foreignUuid('product_id')->nullable()->constrained('products');
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->integer('version')->default(1);
@@ -66,6 +63,9 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->foreignUuid('completed_user_id')->nullable()->constrained('users');
             $table->jsonb('data')->default(json_encode([]));
+            $table->foreignUuid('list_id')->constrained('lists');
+            $table->foreignUuid('user_id')->constrained('users');
+            $table->foreignUuid('product_id')->nullable()->constrained('products');
             $table->timestamps();
         });
     }
