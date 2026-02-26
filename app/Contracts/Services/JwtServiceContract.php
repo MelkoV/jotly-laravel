@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Contracts\Services;
 
 use App\Data\User\JwtTokenData;
-use App\Enums\JwtTokenType;
 use App\Exceptions\JwtException;
 
 interface JwtServiceContract

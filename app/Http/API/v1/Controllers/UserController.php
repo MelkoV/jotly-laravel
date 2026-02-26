@@ -76,7 +76,7 @@ final class UserController extends Controller
             'refreshToken' => $this->jwtService->encode(
                 new JwtTokenData(
                     userId: $user->id,
-                    type: JwtTokenType::Permanent,
+                    type: JwtTokenType::Refresh,
                     time: 3600 * 24
                 )
             ),

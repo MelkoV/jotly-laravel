@@ -24,18 +24,18 @@ class UserTest extends TestCase
     public function test_encode_and_decode_jwt_token(): void
     {
         $service = resolve(JwtServiceContract::class);
-        $encoded = new JwtTokenData(userId: 'TestUserId', type: JwtTokenType::Permanent);
+        $encoded = new JwtTokenData(userId: 'TestUserId', type: JwtTokenType::Refresh);
         $token = $service->encode($encoded);
         $decoded = $service->decode($token);
         $this->assertTrue($decoded->userId === $encoded->userId);
         $this->assertTrue($decoded->type === $encoded->type);
-        $this->assertTrue($decoded->type === JwtTokenType::Permanent);
+        $this->assertTrue($decoded->type === JwtTokenType::Refresh);
     }
 
     public function test_decode_expired_jwt_token(): void
     {
         $service = resolve(JwtServiceContract::class);
-        $encoded = new JwtTokenData(userId: 'TestUserId', type: JwtTokenType::Permanent, time: 1);
+        $encoded = new JwtTokenData(userId: 'TestUserId', type: JwtTokenType::Refresh, time: 1);
         $token = $service->encode($encoded);
         sleep(2);
         $this->expectException(JwtException::class);

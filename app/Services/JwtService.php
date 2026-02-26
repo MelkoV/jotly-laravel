@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Contracts\Services\JwtServiceContract;
 use App\Data\User\JwtTokenData;
-use App\Enums\JwtTokenType;
 use App\Exceptions\JwtException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;

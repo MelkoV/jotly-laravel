@@ -355,7 +355,7 @@ class UserApiTest extends TestCase
 
     public function test_profile_with_incorrect_token(): void
     {
-        $response = $this->withJwtToken($this->getJwtToken(tokenType: JwtTokenType::Permanent))->get('/api/v1/user/profile');
+        $response = $this->withJwtToken($this->getJwtToken(tokenType: JwtTokenType::Refresh))->get('/api/v1/user/profile');
         $response->assertUnauthorized();
     }
 
@@ -390,7 +390,7 @@ class UserApiTest extends TestCase
 
     public function test_refresh_token_with_correct_data()
     {
-        $response = $this->withJwtToken($this->getJwtToken(tokenType: JwtTokenType::Permanent))->postJson('/api/v1/user/refresh-token');
+        $response = $this->withJwtToken($this->getJwtToken(tokenType: JwtTokenType::Refresh))->postJson('/api/v1/user/refresh-token');
         $response->assertOk();
 
         $response->assertJson(fn (AssertableJson $json) => $json
