@@ -73,7 +73,7 @@ final class UserController extends Controller
                     type: JwtTokenType::Temporary
                 )
             ),
-            'refreshToken' => $this->jwtService->encode(
+            'refresh_token' => $this->jwtService->encode(
                 new JwtTokenData(
                     userId: $user->id,
                     type: JwtTokenType::Refresh,

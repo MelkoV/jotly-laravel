@@ -31,27 +31,28 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->boolean('is_template')->default('false');
             $table->enum('type', array_column(\App\Enums\ListType::cases(), 'value'));
+            $table->timestamp('touched_at')->default(DB::raw('NOW()'));
             $table->string('short_url')->unique();
             $table->integer('access')->default(\App\Enums\ListAccess::Private->value);
             $table->foreignUuid('owner_id')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
-            $table->timestamp('touched_at')->default(DB::raw('NOW()'));
         });
 
         Schema::create('list_users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
             $table->foreignUuid('list_id')->constrained('lists');
             $table->foreignUuid('user_id')->constrained('users');
             $table->timestamps();
+            $table->primary(['list_id', 'user_id']);
         });
 
         Schema::create('list_invites', function (Blueprint $table) {
-            $table->uuid('id')->primary();
             $table->foreignUuid('list_id')->constrained('lists');
             $table->string('email');
             $table->timestamps();
+            $table->primary(['list_id', 'email']);
         });
 
         Schema::create('list_items', function (Blueprint $table) {

@@ -9,9 +9,6 @@ Route::group([
     'prefix' => 'v1',
 ], function () {
 
-    /*
-     * Client routes
-     */
     Route::prefix('/user')->group(function () {
         Route::post('/sign-up', [\App\Http\API\v1\Controllers\UserController::class, 'signUp']);
         Route::post('/sign-in', [\App\Http\API\v1\Controllers\UserController::class, 'signIn']);
@@ -22,6 +19,20 @@ Route::group([
     Route::middleware(\App\Http\Middleware\HandleJwtToken::class)->group(function () {
         Route::prefix('/user')->group(function () {
             Route::get('/profile', [\App\Http\API\v1\Controllers\UserController::class, 'profile']);
+        });
+        Route::prefix('/lists')->group(function () {
+            Route::get('/', [\App\Http\API\v1\Controllers\ListController::class, 'index']);
+            Route::post('/', [\App\Http\API\v1\Controllers\ListController::class, 'create']);
+            Route::get('/delete-types/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'deleteTypes']);
+            Route::get('/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'view']);
+            Route::put('/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'update']);
+            Route::delete('/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'delete']);
+        });
+        Route::prefix('/list-items')->group(function () {
+            Route::post('/', [\App\Http\API\v1\Controllers\ListItemController::class, 'create']);
+            Route::put('/complete/{id}', [\App\Http\API\v1\Controllers\ListItemController::class, 'complete']);
+            Route::put('/{id}', [\App\Http\API\v1\Controllers\ListItemController::class, 'update']);
+            Route::delete('/{id}', [\App\Http\API\v1\Controllers\ListItemController::class, 'delete']);
         });
     });
 

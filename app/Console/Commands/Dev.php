@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Data\List\ListData;
+use App\Models\Lists;
 use Illuminate\Console\Command;
 
 class Dev extends Command
@@ -25,6 +27,8 @@ class Dev extends Command
      */
     public function handle(): int
     {
+        $collect = ListData::collect(Lists::query()->paginate());
+        var_dump($collect);
         return 0;
     }
 }

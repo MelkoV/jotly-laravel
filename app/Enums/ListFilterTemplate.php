@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum ListType: string
+enum ListFilterTemplate: string
 {
     /** Список покупок */
-    case Shopping = 'shopping';
+    case Template = 'template';
     /** Список дел/задач */
-    case Todo = 'todo';
+    case Worksheet = 'worksheet';
 }

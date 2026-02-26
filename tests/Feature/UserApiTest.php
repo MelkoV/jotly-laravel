@@ -156,7 +156,7 @@ class UserApiTest extends TestCase
                 ->whereType('id', 'string')
             )
             ->whereType('token', 'string')
-            ->whereType('refreshToken', 'string')
+            ->whereType('refresh_token', 'string')
             ->missing('errors')
         );
     }
@@ -268,7 +268,7 @@ class UserApiTest extends TestCase
                 ->whereType('id', 'string')
             )
             ->whereType('token', 'string')
-            ->whereType('refreshToken', 'string')
+            ->whereType('refresh_token', 'string')
             ->missing('errors')
         );
     }
@@ -398,7 +398,7 @@ class UserApiTest extends TestCase
                 ->hasAll(['id', 'email', 'name', 'status', 'avatar'])
             )
             ->whereType('token', 'string')
-            ->whereType('refreshToken', 'string')
+            ->whereType('refresh_token', 'string')
             ->missing('errors')
         );
     }

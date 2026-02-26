@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ListAccess;
 use App\Enums\ListType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Lists
@@ -23,7 +25,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $short_url
  * @property string $type
  * @property string $owner_id
+ * @property string $owner_name
+ * @property string $owner_avatar
  * @property int $access
+ * @property bool $is_template
+ * @property bool $can_edit
  * @property string|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -54,10 +60,31 @@ class Lists extends Model
         'description',
         'short_url',
         'type',
+        'is_template',
         'owner_id',
         'access',
         'touched_at'
     ];
+
+    protected $with = ['user'];
+
+    protected $appends = ['owner_name', 'owner_avatar', 'can_edit'];
+
+    public function getOwnerNameAttribute(): string
+    {
+        return $this->user->name;
+    }
+
+    public function getOwnerAvatarAttribute(): ?string
+    {
+        return $this->user->avatar;
+    }
+
+    public function getCanEditAttribute(): bool
+    {
+        return Auth::id() &&
+            (((string)Auth::id() === $this->owner_id || ($this->access & ListAccess::CanEdit->value) > 0));
+    }
 
     /**
      * @return BelongsTo<User, $this>

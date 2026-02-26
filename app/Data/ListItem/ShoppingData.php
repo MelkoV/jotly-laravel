@@ -7,7 +7,7 @@ namespace App\Data\ListItem;
 use App\Enums\ProductUnit;
 use Spatie\LaravelData\Data;
 
-class ShoppingData extends Data
+final class ShoppingData extends Data
 {
     public function __construct(
         public ?float $price,

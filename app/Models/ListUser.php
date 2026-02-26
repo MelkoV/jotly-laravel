@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class ListUser
  *
- * @property string $id
  * @property string $list_id
  * @property string $user_id
  * @property Carbon|null $created_at
@@ -25,8 +24,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class ListUser extends Model
 {
-    use HasUuids;
-
     protected $table = 'list_users';
 
     protected $fillable = [

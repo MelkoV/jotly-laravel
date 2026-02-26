@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class ListInvite
  *
- * @property string $id
  * @property string $list_id
  * @property string $email
  * @property Carbon|null $created_at
@@ -24,10 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class ListInvite extends Model
 {
-    use HasUuids;
-
     protected $table = 'list_invites';
-
 
     protected $fillable = [
         'list_id',

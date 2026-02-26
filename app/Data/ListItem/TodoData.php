@@ -10,12 +10,11 @@ use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
 use Spatie\LaravelData\Data;
 
-class TodoData extends Data
+final class TodoData extends Data
 {
     public function __construct(
-        #[WithCast(DateTimeInterfaceCast::class, format: ['Y-m-d', 'Y-m-d\TH:i:sP'])]
-        public ?Carbon $deadline,
-        public ?TodoPriority $priority,
+        public readonly TodoPriority $priority = TodoPriority::Medium,
+        public readonly ?\DateTime $deadline = null,
     ) {
     }
 }

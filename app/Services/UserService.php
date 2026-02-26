@@ -26,6 +26,7 @@ readonly class UserService implements UserServiceContract
         $this->attachDevice($user, $data->device, $data->device_id);
         // @TODO fetch user avatar by email
         // @TODO send confirmation email
+        // @TODO check invited lists
         return $user;
     }
 
