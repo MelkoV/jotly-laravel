@@ -9,11 +9,14 @@ use App\Data\List\CreateRequestData;
 use App\Data\List\ListData;
 use App\Data\List\ListFilterData;
 use App\Data\List\UpdateRequestData;
+use App\Data\ListItem\UpdateRequestData as UpdateItemRequestData;
 use App\Data\ListItem\CreateRequestData as CreateItemRequestData;
+use App\Data\ListItem\ListItemData;
 use App\Enums\ListAccess;
 use App\Enums\ListFilterTemplate;
 use App\Enums\ListType;
 use App\Exceptions\InvalidListTypeException;
+use App\Exceptions\ListItemNotFoundException;
 use App\Exceptions\ListNotFoundException;
 use App\Models\ListItem;
 use App\Models\Lists;
@@ -92,7 +95,9 @@ class ListRepository implements ListRepositoryContract
     {
         $query = Lists::query()
             ->join('list_users', 'lists.id', '=', 'list_users.list_id')
-            ->where('list_users.user_id', $filter->user_id);
+            ->where('list_users.user_id', $filter->user_id)
+            ->whereNull('lists.deleted_at')
+            ->orderByDesc('lists.touched_at');
         $this->applyFilterToQuery($filter, $query);
         return ListData::collect($query->paginate(
             perPage: $filter->per_page,
@@ -128,31 +133,53 @@ class ListRepository implements ListRepositoryContract
         return ListData::from($model);
     }
 
-    public function createListItem(CreateItemRequestData $data): void
+    /**
+     * @param CreateItemRequestData $data
+     * @return ListItemData
+     * @throws InvalidListTypeException
+     * @throws ListNotFoundException
+     */
+    public function createListItem(CreateItemRequestData $data): ListItemData
     {
-        $listData = $this->findById($data->list_id);
-        $listItemModel = $this->makeListItemModel($listData->type);
+        /** @var array<string, mixed> $record */
+        $record = [
+            ...$data->toArray(),
+            'version' => 1,
+            'data' => $data->toArray(),
+            'is_completed' => false,
+        ];
+        $listItemModel = ListItem::create($record);
+        return ListItemData::from([
+            ...$listItemModel->toArray(),
+            'attributes' => $listItemModel->data,
+        ]);
+    }
+
+
+    /**
+     * @param UpdateItemRequestData $data
+     * @return ListItemData
+     * @throws ListItemNotFoundException
+     */
+    public function updateListItem(UpdateItemRequestData $data): ListItemData
+    {
+        $model = ListItem::query()
+            ->where('id', $data->id)
+            ->where('version', $data->version)
+            ->first();
+        if (!$model) {
+            throw new ListItemNotFoundException(__('app.list_item_not_exists'));
+        }
         /** @var array<string, mixed> $record */
         $record = [
             ...$data->toArray(),
             'data' => $data->toArray(),
+            'version' => $data->version + 1,
         ];
-        $listItemModel->fill($record);
-    }
-
-    /**
-     * @param ListType $type
-     * @return ListItem
-     * @throws InvalidListTypeException
-     */
-    private function makeListItemModel(ListType $type): ListItem
-    {
-        switch ($type) {
-            case ListType::Todo:
-                return new TodoListItem();
-            case ListType::Shopping:
-                return new ShoppingListItem();
-        }
-        throw new InvalidListTypeException();
+        $model->fill($record);
+        $model->save();
+        return ListItemData::from([
+            ...$model->toArray(),
+        ]);
     }
 }

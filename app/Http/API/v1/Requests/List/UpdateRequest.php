@@ -26,7 +26,7 @@ class UpdateRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         return [
             'id' => ['required', 'uuid', 'bail', new CheckCanEditList()],
-            'name' => ['required', 'string', 'min:3', 'max:100'],
+            'name' => ['required', 'string', 'min:1', 'max:100'],
             'description' => ['string', 'nullable', 'max:250'],
         ];
     }

@@ -8,12 +8,12 @@ use App\Enums\ProductUnit;
 use App\Enums\TodoPriority;
 use Spatie\LaravelData\Data;
 
-final class CreateRequestData extends Data
+final class UpdateRequestData extends Data
 {
     public function __construct(
-        public readonly string $user_id,
-        public readonly string $list_id,
+        public readonly string $id,
         public readonly string $name,
+        public readonly int $version,
         public readonly ?TodoPriority $priority = TodoPriority::Medium,
         public readonly ?string $description,
         public readonly ?ProductUnit $unit,

@@ -8,7 +8,9 @@ use App\Data\List\ListData;
 use App\Data\List\ListFilterData;
 use App\Data\List\CreateRequestData;
 use App\Data\ListItem\CreateRequestData as CreateItemRequestData;
+use App\Data\ListItem\UpdateRequestData as UpdateItemRequestData;
 use App\Data\List\UpdateRequestData;
+use App\Data\ListItem\ListItemData;
 use App\Exceptions\ListNotFoundException;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Enumerable;
@@ -31,7 +33,9 @@ interface ListRepositoryContract
 
     public function findById(string $id): ListData;
 
-    public function createListItem(CreateItemRequestData $data): void;
+    public function createListItem(CreateItemRequestData $data): ListItemData;
+
+    public function updateListItem(UpdateItemRequestData $data): ListItemData;
 
     /*public function delete(string $id): bool;
 

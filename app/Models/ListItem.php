@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Data\ListItem\ListItemAttributesData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -19,15 +20,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $name
  * @property string|null $description
  * @property int $version
- * @property bool $completed
+ * @property bool $is_completed
  * @property Carbon|null $completed_at
  * @property string|null $completed_user_id
- * @property string $data
+ * @property ListItemAttributesData $data
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
  * @property Lists $list
- * @property User|null $user
+ * @property User $user
+ * @property User|null $completedUser
  *
  * @package App\Models
  */
@@ -39,6 +41,7 @@ class ListItem extends Model
 
     protected $casts = [
         'completed_at' => 'datetime',
+        'data' => ListItemAttributesData::class,
     ];
 
     protected $fillable = [
@@ -48,11 +51,49 @@ class ListItem extends Model
         'name',
         'description',
         'version',
-        'completed',
+        'is_completed',
         'completed_at',
         'completed_user_id',
         'data'
     ];
+
+    protected $with = ['user', 'completedUser'];
+
+    protected $appends = ['user_name', 'user_avatar', 'completed_user_name', 'completed_user_avatar', 'attributes'];
+
+    public function toArray(): array
+    {
+        $data = parent::toArray();
+        $data['data'] = collect($data['data'])->filter(function ($value) {
+            return $value !== null;
+        })->all();
+        return $data;
+    }
+
+    public function getUserNameAttribute(): string
+    {
+        return $this->user->name;
+    }
+
+    public function getUserAvatarAttribute(): ?string
+    {
+        return $this->user->avatar;
+    }
+
+    public function getCompletedUserNameAttribute(): ?string
+    {
+        return $this->completedUser?->name;
+    }
+
+    public function getCompletedUserAvatarAttribute(): ?string
+    {
+        return $this->completedUser?->avatar;
+    }
+
+    public function getAttributesAttribute(): ListItemAttributesData
+    {
+        return $this->data;
+    }
 
     /**
      * @return BelongsTo<Lists, $this>
@@ -66,6 +107,14 @@ class ListItem extends Model
      * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function completedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'completed_user_id');
     }

@@ -26,7 +26,7 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:3', 'max:100'],
+            'name' => ['required', 'string', 'min:1', 'max:100'],
             'type' => [Rule::enum(ListType::class), 'required'],
             'is_template' => ['required', 'boolean'],
             'description' => ['string', 'nullable', 'max:250'],

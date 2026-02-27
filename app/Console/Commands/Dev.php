@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Data\List\ListData;
 use App\Models\Lists;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class Dev extends Command
 {
@@ -27,8 +28,12 @@ class Dev extends Command
      */
     public function handle(): int
     {
-        $collect = ListData::collect(Lists::query()->paginate());
-        var_dump($collect);
+        $v = DB::table('list_items')
+            ->join('lists', 'lists.id', '=', 'list_items.list_id')
+            ->select('lists.type')
+            ->where('list_items.id', '019c9e92-96e0-7268-a830-15227cf2269b')
+            ->value('type');
+        print_r($v);
         return 0;
     }
 }

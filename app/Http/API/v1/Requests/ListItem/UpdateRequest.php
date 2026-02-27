@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace App\Http\API\v1\Requests\ListItem;
 
 use App\Data\ListItem\CreateRequestData;
+use App\Data\ListItem\UpdateRequestData;
 use App\Enums\ProductUnit;
 use App\Enums\TodoPriority;
-use App\Rules\CheckCanEditList;
+use App\Rules\CheckCanEditListByItem;
 use Illuminate\Validation\Rule;
 
 /**
- * @summary Создание нового элемента списка
+ * @summary Обновление элемента списка
  *
  * @description
- * Создание нового элемента списка
+ * Обновление элемента списка
  *
- * @_201 Успешная операция
+ * @_200 Успешная операция
  *
  * @_422 Ошибка валидации данных
  */
-class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
+class UpdateRequest extends \Illuminate\Foundation\Http\FormRequest
 {
     /**
      * @return array<string, list<string|object>>
@@ -28,9 +29,9 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'uuid'],
-            'list_id' => ['required', 'uuid', 'bail', new CheckCanEditList()],
+            'id' => ['required', 'uuid', 'bail', new CheckCanEditListByItem()],
             'name' => ['required', 'string', 'min:1', 'max:100'],
+            'version' => ['required', 'integer', 'min:1'],
             'priority' => ['nullable', Rule::enum(TodoPriority::class)],
             'description' => ['string', 'nullable', 'max:250'],
             'unit' => ['nullable', Rule::enum(ProductUnit::class)],
@@ -41,16 +42,16 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
         ];
     }
 
+    public function toData(): UpdateRequestData
+    {
+        return UpdateRequestData::from($this->validated());
+    }
+
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'user_id' => $this->user()->id,
+            'id' => $this->route('id'),
         ]);
-    }
-
-    public function toData(): CreateRequestData
-    {
-        return CreateRequestData::from($this->validated());
     }
 
 }

@@ -10,6 +10,9 @@ use App\Data\List\CreateRequestData;
 use App\Data\List\ListData;
 use App\Data\List\ListFilterData;
 use App\Data\List\UpdateRequestData;
+use App\Data\ListItem\CreateRequestData as CreateItemRequestData;
+use App\Data\ListItem\ListItemData;
+use App\Data\ListItem\UpdateRequestData as UpdateItemRequestData;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Enumerable;
 
@@ -38,5 +41,22 @@ readonly class ListService implements ListServiceContract
     public function getFilteredLists(ListFilterData $filter): AbstractPaginator|Enumerable
     {
         return $this->listRepository->getFilteredLists($filter);
+    }
+
+    /**
+     * @param CreateItemRequestData $data
+     * @return ListItemData
+     */
+    public function createListItem(CreateItemRequestData $data): ListItemData
+    {
+        $this->listRepository->touch($data->list_id);
+        return $this->listRepository->createListItem($data);
+    }
+
+    public function updateListItem(UpdateItemRequestData $data): ListItemData
+    {
+        $listItemData = $this->listRepository->updateListItem($data);
+        $this->listRepository->touch($listItemData->list_id);
+        return $listItemData;
     }
 }

@@ -60,7 +60,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->integer('version')->default(1);
-            $table->boolean('completed')->default(false);
+            $table->boolean('is_completed')->default(false);
             $table->timestamp('completed_at')->nullable();
             $table->foreignUuid('completed_user_id')->nullable()->constrained('users');
             $table->jsonb('data')->default(json_encode([]));
