@@ -11,6 +11,7 @@ final class ListData extends Data
 {
     public function __construct(
         public readonly string $id,
+        public readonly string $owner_id,
         public readonly string $name,
         public readonly bool $is_template,
         public readonly ListType $type,

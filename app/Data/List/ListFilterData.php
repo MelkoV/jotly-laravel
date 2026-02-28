@@ -18,7 +18,6 @@ final class ListFilterData extends Data
         public readonly ?ListType           $type = null,
         public readonly ?ListFilterTemplate $template = null,
         public readonly ?string             $text = null,
-    )
-    {
+    ) {
     }
 }

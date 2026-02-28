@@ -9,20 +9,18 @@ use App\Data\List\CreateRequestData;
 use App\Data\List\ListData;
 use App\Data\List\ListFilterData;
 use App\Data\List\UpdateRequestData;
+use App\Data\ListItem\DeleteRequestData as DeleteItemRequestData;
 use App\Data\ListItem\UpdateRequestData as UpdateItemRequestData;
 use App\Data\ListItem\CreateRequestData as CreateItemRequestData;
 use App\Data\ListItem\ListItemData;
 use App\Enums\ListAccess;
 use App\Enums\ListFilterTemplate;
-use App\Enums\ListType;
 use App\Exceptions\InvalidListTypeException;
 use App\Exceptions\ListItemNotFoundException;
 use App\Exceptions\ListNotFoundException;
 use App\Models\ListItem;
 use App\Models\Lists;
 use App\Models\ListUser;
-use App\Models\ShoppingListItem;
-use App\Models\TodoListItem;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\AbstractPaginator;
@@ -133,6 +131,20 @@ class ListRepository implements ListRepositoryContract
         return ListData::from($model);
     }
 
+    public function delete(string $id): void
+    {
+        ListUser::query()->where('list_id', $id)->delete();
+        Lists::query()->where('id', $id)->delete();
+    }
+
+    public function leftUser(string $listId, string $userId): void
+    {
+        ListUser::query()
+            ->where('list_id', $listId)
+            ->where('user_id', $userId)
+            ->delete();
+    }
+
     /**
      * @param CreateItemRequestData $data
      * @return ListItemData
@@ -163,13 +175,7 @@ class ListRepository implements ListRepositoryContract
      */
     public function updateListItem(UpdateItemRequestData $data): ListItemData
     {
-        $model = ListItem::query()
-            ->where('id', $data->id)
-            ->where('version', $data->version)
-            ->first();
-        if (!$model) {
-            throw new ListItemNotFoundException(__('app.list_item_not_exists'));
-        }
+        $model = $this->findListItem($data->id, $data->version);
         /** @var array<string, mixed> $record */
         $record = [
             ...$data->toArray(),
@@ -178,8 +184,71 @@ class ListRepository implements ListRepositoryContract
         ];
         $model->fill($record);
         $model->save();
-        return ListItemData::from([
-            ...$model->toArray(),
+        return ListItemData::from($model);
+    }
+
+    /**
+     * @param string $listItemId
+     * @param string $completeUserId
+     * @return ListItemData
+     * @throws ListItemNotFoundException
+     */
+    public function completeListItem(string $listItemId, string $completeUserId): ListItemData
+    {
+        $model = $this->findListItem($listItemId);
+        if ($model->is_completed) {
+            return ListItemData::from($model);
+        }
+        $model->fill([
+            'is_completed' => true,
+            'completed_at' => Carbon::now(),
+            'completed_user_id' => $completeUserId
         ]);
+        $model->save();
+        $model->refresh();
+        return ListItemData::from($model);
+    }
+
+    /**
+     * @param DeleteItemRequestData $data
+     * @return bool
+     * @throws ListItemNotFoundException
+     */
+    public function deleteListItem(DeleteItemRequestData $data): bool
+    {
+        $model = $this->findListItem($data->id, $data->version);
+        return $model->delete();
+    }
+
+    /**
+     * @param string $listItemId
+     * @param int|null $version
+     * @return ListItem
+     * @throws ListItemNotFoundException
+     */
+    private function findListItem(string $listItemId, ?int $version = null): ListItem
+    {
+        $query = ListItem::query()->where('id', $listItemId);
+        if ($version !== null) {
+            $query->where('version', $version);
+        }
+        $model = $query->first();
+        if (!$model) {
+            throw new ListItemNotFoundException(__('app.list_item_not_exists'));
+        }
+        return $model;
+    }
+
+    /**
+     * @param string $listId
+     * @return AbstractPaginator<int, ListItemData>|Enumerable<int, ListItemData>
+     */
+    public function getListItems(string $listId): AbstractPaginator|Enumerable
+    {
+        $query = ListItem::query()
+            ->where('list_id', $listId)
+            ->orderBy('is_completed')
+            ->orderBy('created_at');
+        return ListItemData::collect($query->get());
     }
 }

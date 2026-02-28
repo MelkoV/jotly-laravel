@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Data\List\ListData;
+use App\Models\ListItem;
 use App\Models\Lists;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -28,12 +29,8 @@ class Dev extends Command
      */
     public function handle(): int
     {
-        $v = DB::table('list_items')
-            ->join('lists', 'lists.id', '=', 'list_items.list_id')
-            ->select('lists.type')
-            ->where('list_items.id', '019c9e92-96e0-7268-a830-15227cf2269b')
-            ->value('type');
-        print_r($v);
+        $model = ListItem::query()->where('id', '019c9a5f-2a1b-71aa-bd3e-3802596eb33b')->first();
+        print_r($model);
         return 0;
     }
 }

@@ -24,6 +24,7 @@ Route::group([
             Route::get('/', [\App\Http\API\v1\Controllers\ListController::class, 'index']);
             Route::post('/', [\App\Http\API\v1\Controllers\ListController::class, 'create']);
             Route::get('/delete-types/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'deleteTypes']);
+            Route::delete('/left/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'left']);
             Route::get('/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'view']);
             Route::put('/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'update']);
             Route::delete('/{id}', [\App\Http\API\v1\Controllers\ListController::class, 'delete']);

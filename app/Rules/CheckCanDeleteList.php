@@ -5,7 +5,7 @@ namespace App\Rules;
 use Closure;
 use Illuminate\Support\Facades\DB;
 
-class CheckCanEditListByItem extends AccessListRule
+class CheckCanDeleteList extends AccessListRule
 {
     /**
      * Run the validation rule.
@@ -14,10 +14,9 @@ class CheckCanEditListByItem extends AccessListRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $query = DB::table('list_items')
-            ->where('list_items.id', $value)
-            ->join('lists', 'list_items.list_id', '=', 'lists.id');
-        if (!$this->checkEditQuery($query)->exists()) {
+        $query = DB::table('lists')
+            ->where('lists.id', $value);
+        if (!$this->checkDeleteQuery($query)->exists()) {
             $fail(__('app.list_edit_denied'));
         }
     }

@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace App\Http\API\v1\Controllers;
 
 use App\Contracts\Services\ListServiceContract;
+use App\Data\List\ListViewData;
+use App\Enums\DeleteListType;
 use App\Http\API\v1\Requests\List\CreateRequest;
+use App\Http\API\v1\Requests\List\DeleteRequest;
+use App\Http\API\v1\Requests\List\DeleteTypesRequest;
 use App\Http\API\v1\Requests\List\FilteredListRequest;
+use App\Http\API\v1\Requests\List\LeftRequest;
 use App\Http\API\v1\Requests\List\UpdateRequest;
+use App\Http\API\v1\Requests\List\ViewRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,9 +35,12 @@ class ListController extends Controller
         return response()->json($data, Response::HTTP_CREATED);
     }
 
-    public function view()
+    public function view(ViewRequest $request): JsonResponse
     {
-
+        return response()->json(new ListViewData(
+            model: $this->listService->findById($request->validated('id')),
+            items: $this->listService->getListItems($request->validated('id'))
+        ));
     }
 
     public function update(UpdateRequest $request): JsonResponse
@@ -40,13 +49,24 @@ class ListController extends Controller
         return response()->json($data);
     }
 
-    public function deleteTypes()
+    public function left(LeftRequest $request): JsonResponse
     {
-
+        $this->listService->leftUser($request->validated('id'), $request->validated('user_id'));
+        return response()->json(['success' => true]);
     }
 
-    public function delete()
+    public function deleteTypes(DeleteTypesRequest $request): JsonResponse
     {
+        $list = $this->listService->findById($request->validated('id'));
+        return response()->json([
+            DeleteListType::Left->value => true,
+            DeleteListType::Delete->value => $list->owner_id === $request->validated('user_id'),
+        ]);
+    }
 
+    public function delete(DeleteRequest $request): JsonResponse
+    {
+        $this->listService->delete($request->validated('id'));
+        return response()->json(['success' => true]);
     }
 }

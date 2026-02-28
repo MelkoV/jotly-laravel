@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Support\Facades\DB;
 
-class CheckCanEditList extends AccessListRule
+class CheckCanViewList extends AccessListRule
 {
     /**
      * Run the validation rule.
@@ -15,7 +15,7 @@ class CheckCanEditList extends AccessListRule
     {
         $query = DB::table('lists')
             ->where('lists.id', $value);
-        if (!$this->checkEditQuery($query)->exists()) {
+        if (!$this->checkViewQuery($query)->exists()) {
             $fail(__('app.list_edit_denied'));
         }
     }
