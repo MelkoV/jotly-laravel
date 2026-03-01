@@ -11,18 +11,20 @@ Once you need generate key for Laravel. Run `docker-compose exec jotly-laravel-l
 
 Level: 10
 
-`./vendor/bin/phpstan analyse`
+`./vendor/bin/phpstan analyse` or `make stan`
 
 ## PHP_CodeSniffer
 
 Standard: PSR12
 
-`./vendor/bin/phpcs /var/www/html/app`
+`./vendor/bin/phpcs /var/www/html/app` or `make lint`
 
-`./vendor/bin/phpcbf /var/www/html/app`
+`./vendor/bin/phpcbf /var/www/html/app` or `make fix`
 
 ## Swagger
 
-`php artisan swagger:push-documentation` after tests
+`php artisan swagger:push-documentation` or `make doc` after tests
+
+Or run `make test` to run tests and generate documentation
 
 Swagger UI: http://localhost:8080/doc (or another port from .env)
