@@ -103,7 +103,7 @@ interface ListRepositoryContract
 
     /**
      * @param string $listId
-     * @return AbstractPaginator<int, ListData>|Enumerable<int, ListData>
+     * @return AbstractPaginator<int, ListItemData>|Enumerable<int, ListItemData>
      */
     public function getListItems(string $listId): AbstractPaginator|Enumerable;
 }

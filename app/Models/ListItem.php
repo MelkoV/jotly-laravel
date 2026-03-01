@@ -61,14 +61,14 @@ class ListItem extends Model
 
     protected $appends = ['user_name', 'user_avatar', 'completed_user_name', 'completed_user_avatar', 'attributes'];
 
-    public function toArray(): array
+    /*public function toArray(): array
     {
         $data = parent::toArray();
         $data['data'] = collect($data['data'])->filter(function ($value) {
             return $value !== null;
         })->all();
         return $data;
-    }
+    }*/
 
     public function getUserNameAttribute(): string
     {

@@ -103,7 +103,12 @@ class ListRepository implements ListRepositoryContract
         ));
     }
 
-    /** TODO text search by name and description */
+    /**
+     * @param ListFilterData $filter
+     * @param Builder<Lists> $query
+     * @return void
+     * @TODO text search by name and description
+     */
     private function applyFilterToQuery(ListFilterData $filter, Builder $query): void
     {
         if ($filter->is_owner) {
@@ -217,7 +222,7 @@ class ListRepository implements ListRepositoryContract
     public function deleteListItem(DeleteItemRequestData $data): bool
     {
         $model = $this->findListItem($data->id, $data->version);
-        return $model->delete();
+        return $model->delete() === true;
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\API\v1\Requests\List;
 
+use App\Data\List\RequestIdData;
 use App\Rules\CheckCanDeleteList;
 
 /**
@@ -33,5 +34,10 @@ class DeleteRequest extends \Illuminate\Foundation\Http\FormRequest
         $this->merge([
             'id' => $this->route('id'),
         ]);
+    }
+
+    public function toData(): RequestIdData
+    {
+        return RequestIdData::from($this->validated());
     }
 }

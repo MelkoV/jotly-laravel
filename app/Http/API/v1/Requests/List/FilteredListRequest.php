@@ -8,6 +8,7 @@ use App\Data\List\CreateRequestData;
 use App\Data\List\ListFilterData;
 use App\Enums\ListFilterTemplate;
 use App\Enums\ListType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
@@ -44,7 +45,7 @@ class FilteredListRequest extends \Illuminate\Foundation\Http\FormRequest
             'is_owner' => $this->is_owner ?? false,
             'page' => $this->page ?? 1,
             'per_page' => $this->per_page ?? 100,
-            'user_id' => $this->user()->id,
+            'user_id' => Auth::id(),
         ]);
     }
 
@@ -52,5 +53,4 @@ class FilteredListRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         return ListFilterData::from($this->validated());
     }
-
 }

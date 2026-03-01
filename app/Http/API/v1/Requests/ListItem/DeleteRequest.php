@@ -42,5 +42,4 @@ class DeleteRequest extends \Illuminate\Foundation\Http\FormRequest
             'id' => $this->route('id'),
         ]);
     }
-
 }

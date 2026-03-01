@@ -21,6 +21,5 @@ final class ListItemData extends Data
         public readonly ?string $completed_user_name,
         public readonly ?string $completed_user_avatar,
     ) {
-
     }
 }

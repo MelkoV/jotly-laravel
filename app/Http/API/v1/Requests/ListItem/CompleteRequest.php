@@ -8,6 +8,7 @@ use App\Data\ListItem\CompleteRequestData;
 use App\Enums\ProductUnit;
 use App\Enums\TodoPriority;
 use App\Rules\CheckCanEditListByItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
@@ -51,8 +52,7 @@ class CompleteRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         $this->merge([
             'id' => $this->route('id'),
-            'complete_user_id' => $this->user()->id,
+            'complete_user_id' => Auth::id(),
         ]);
     }
-
 }

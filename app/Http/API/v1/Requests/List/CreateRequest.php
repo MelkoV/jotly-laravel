@@ -6,6 +6,7 @@ namespace App\Http\API\v1\Requests\List;
 
 use App\Data\List\CreateRequestData;
 use App\Enums\ListType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
@@ -37,7 +38,7 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'owner_id' => $this->user()->id,
+            'owner_id' => Auth::id(),
         ]);
     }
 
@@ -45,5 +46,4 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         return CreateRequestData::from($this->validated());
     }
-
 }

@@ -12,9 +12,9 @@ use Spatie\LaravelData\Data;
 final class ListViewData extends Data
 {
     public function __construct(
-       public readonly ListData $model,
-       /** @var AbstractPaginator<int, ListItemData>|Enumerable<int, ListItemData> */
-       public readonly AbstractPaginator|Enumerable $items,
+        public readonly ListData $model,
+        /** @var AbstractPaginator<int, ListItemData>|Enumerable<int, ListItemData> */
+        public readonly AbstractPaginator|Enumerable $items,
     ) {
     }
 }

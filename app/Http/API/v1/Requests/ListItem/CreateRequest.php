@@ -8,6 +8,7 @@ use App\Data\ListItem\CreateRequestData;
 use App\Enums\ProductUnit;
 use App\Enums\TodoPriority;
 use App\Rules\CheckCanEditList;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
@@ -44,7 +45,7 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'user_id' => $this->user()->id,
+            'user_id' => Auth::id(),
         ]);
     }
 
@@ -52,5 +53,4 @@ class CreateRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         return CreateRequestData::from($this->validated());
     }
-
 }

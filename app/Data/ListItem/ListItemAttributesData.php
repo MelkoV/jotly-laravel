@@ -6,6 +6,7 @@ namespace App\Data\ListItem;
 
 use App\Enums\ProductUnit;
 use App\Enums\TodoPriority;
+use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Data;
 
 class ListItemAttributesData extends Data
@@ -13,7 +14,7 @@ class ListItemAttributesData extends Data
     public function __construct(
         public readonly ?TodoPriority $priority,
         public readonly ?ProductUnit $unit,
-        public readonly ?\DateTime $deadline,
+        public readonly ?Carbon $deadline,
         public readonly ?float $price,
         public readonly ?float $cost,
         public readonly ?float $count,
@@ -26,7 +27,10 @@ class ListItemAttributesData extends Data
         $result = collect($data)->filter(function ($value) {
             return $value !== null;
         })->all();
-        return json_encode($result, $options);
+        $json = json_encode($result, $options);
+        if ($json === false) {
+            throw new \Exception(sprintf('Can not convert ListItemAttributesData to json: %s', json_last_error_msg()));
+        }
+        return $json;
     }
-
 }

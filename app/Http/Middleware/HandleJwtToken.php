@@ -8,5 +8,8 @@ use App\Enums\JwtTokenType;
 
 class HandleJwtToken extends AbstractHandleJwtToken
 {
-    protected JwtTokenType $jwtTokenType = JwtTokenType::Temporary;
+    protected function getJwtTokenTokenType(): JwtTokenType
+    {
+        return JwtTokenType::Temporary;
+    }
 }

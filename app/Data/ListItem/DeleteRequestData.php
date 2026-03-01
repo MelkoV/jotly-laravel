@@ -14,6 +14,5 @@ final class DeleteRequestData extends Data
         public readonly string $id,
         public readonly int $version,
     ) {
-
     }
 }

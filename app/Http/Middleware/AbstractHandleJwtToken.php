@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractHandleJwtToken
 {
-    protected JwtTokenType $jwtTokenType;
+    abstract protected function getJwtTokenTokenType(): JwtTokenType;
 
     public function __construct(
         private readonly JwtServiceContract $jwtService
@@ -56,7 +56,7 @@ abstract class AbstractHandleJwtToken
     public function decodeToken(string $token): JwtTokenData
     {
         $data = $this->jwtService->decode($token);
-        if ($data->type !== $this->jwtTokenType) {
+        if ($data->type !== $this->getJwtTokenTokenType()) {
             throw new JwtException('Invalid token type');
         }
         return $data;

@@ -14,14 +14,13 @@ final class UpdateRequestData extends Data
         public readonly string $id,
         public readonly string $name,
         public readonly int $version,
-        public readonly ?TodoPriority $priority = TodoPriority::Medium,
-        public readonly ?string $description,
-        public readonly ?ProductUnit $unit,
-        public readonly ?\DateTime $deadline,
-        public readonly ?float $price,
-        public readonly ?float $cost,
-        public readonly ?float $count,
+        public readonly ?TodoPriority $priority = null,
+        public readonly ?string $description = null,
+        public readonly ?ProductUnit $unit = null,
+        public readonly ?\DateTime $deadline = null,
+        public readonly ?float $price = null,
+        public readonly ?float $cost = null,
+        public readonly ?float $count = null,
     ) {
-
     }
 }

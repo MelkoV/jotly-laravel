@@ -37,9 +37,10 @@ class ListController extends Controller
 
     public function view(ViewRequest $request): JsonResponse
     {
+        $data = $request->toData();
         return response()->json(new ListViewData(
-            model: $this->listService->findById($request->validated('id')),
-            items: $this->listService->getListItems($request->validated('id'))
+            model: $this->listService->findById($data->id),
+            items: $this->listService->getListItems($data->id)
         ));
     }
 
@@ -51,22 +52,25 @@ class ListController extends Controller
 
     public function left(LeftRequest $request): JsonResponse
     {
-        $this->listService->leftUser($request->validated('id'), $request->validated('user_id'));
+        $data = $request->toData();
+        $this->listService->leftUser($data->id, $data->user_id);
         return response()->json(['success' => true]);
     }
 
     public function deleteTypes(DeleteTypesRequest $request): JsonResponse
     {
-        $list = $this->listService->findById($request->validated('id'));
+        $data = $request->toData();
+        $list = $this->listService->findById($data->id);
         return response()->json([
             DeleteListType::Left->value => true,
-            DeleteListType::Delete->value => $list->owner_id === $request->validated('user_id'),
+            DeleteListType::Delete->value => $list->owner_id === $data->user_id,
         ]);
     }
 
     public function delete(DeleteRequest $request): JsonResponse
     {
-        $this->listService->delete($request->validated('id'));
+        $data = $request->toData();
+        $this->listService->delete($data->id);
         return response()->json(['success' => true]);
     }
 }

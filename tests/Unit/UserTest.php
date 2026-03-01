@@ -65,12 +65,18 @@ class UserTest extends TestCase
         // Get user by email
         $testUser = $repository->findByEmail($email);
         $this->assertEquals($email, $testUser->email);
+    }
 
-        // Get no such user by id
+    public function test_user_repository_user_not_found_by_id()
+    {
+        $repository = new UserRepository();
         $this->expectException(UserNotFoundException::class);
         $repository->findById(\Str::uuid());
+    }
 
-        // Get no such user by email
+    public function test_user_repository_user_not_found_by_email()
+    {
+        $repository = new UserRepository();
         $this->expectException(UserNotFoundException::class);
         $repository->findByEmail(sprintf('%s_fake@test.test', uniqid()));
     }
@@ -78,9 +84,6 @@ class UserTest extends TestCase
     public function test_user_service(): void
     {
         $service = new UserService(userRepository: new UserRepositoryDummy());
-        $this->app->bind(\Illuminate\Support\Facades\Auth::class, function () {
-            return new AuthDummy();
-        });
 
         $user = $service->signUp(new SignUpData(
             email: 'success@test.test',
@@ -103,6 +106,18 @@ class UserTest extends TestCase
         $this->assertEquals('success@test.test', $user->email);
         $this->assertEquals('success', $user->id);
 
+        $user = $service->profile('success');
+        $this->assertEquals('success@test.test', $user->email);
+        $this->assertEquals('success', $user->id);
+
+        $this->expectException(UserNotFoundException::class);
+        $service->profile('error');
+    }
+
+    public function test_user_service_sign_in_error(): void
+    {
+        $service = new UserService(userRepository: new UserRepositoryDummy());
+
         Auth::shouldReceive('attempt')->once()->andReturn(false);
         $this->expectException(UserNotFoundException::class);
         $service->signIn(new SignInData(
@@ -111,13 +126,6 @@ class UserTest extends TestCase
             device: UserDevice::Web,
             device_id: uniqid()
         ));
-
-        $user = $service->profile('success');
-        $this->assertEquals('success@test.test', $user->email);
-        $this->assertEquals('success', $user->id);
-
-        $this->expectException(UserNotFoundException::class);
-        $service->profile('error');
     }
 }
 

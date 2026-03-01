@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\API\v1\Requests\List;
 
+use App\Data\List\RequestIdAndUserData;
 use App\Rules\CheckCanViewList;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @summary Возможные варианты удаления списка
@@ -33,7 +35,12 @@ class DeleteTypesRequest extends \Illuminate\Foundation\Http\FormRequest
     {
         $this->merge([
             'id' => $this->route('id'),
-            'user_id' => $this->user()->id,
+            'user_id' => Auth::id(),
         ]);
+    }
+
+    public function toData(): RequestIdAndUserData
+    {
+        return RequestIdAndUserData::from($this->validated());
     }
 }
