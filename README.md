@@ -40,3 +40,7 @@ Swagger UI: http://localhost:8080/doc (or another port from .env)
 Actual: **94,66%**
 
 `php artisan test --coverage`
+
+## Mutation testing
+
+`./vendor/bin/infection` or `make mutate`

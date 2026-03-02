@@ -15,6 +15,9 @@ fix:
 doc:
 	php artisan swagger:push-documentation
 
+mutate:
+	./vendor/bin/infection
+
 test: t doc
 
 check: stan lint

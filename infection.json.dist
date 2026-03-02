@@ -1,0 +1,17 @@
+{
+    "source": {
+        "directories": [
+            "app"
+        ],
+        "excludes": [
+            "Models"
+        ]
+    },
+    "logs": {
+        "text": "storage/logs/infection.log",
+        "summary": "storage/logs/summary.log"
+    },
+    "timeout": 60,
+    "threads": "max",
+    "testFramework": "phpunit",
+}
