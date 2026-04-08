@@ -13,9 +13,11 @@ use App\Rules\CheckCanEditList;
  * @description
  * Редактирование списка
  *
- * @_200 Успешная операция
+ * @swaggerIgnore id
  *
- * @_422 Ошибка валидации данных
+ * @_200 Успешное редактирование
+ *
+ * @_422 Ошибка валидации входных данных
  */
 class UpdateRequest extends \Illuminate\Foundation\Http\FormRequest
 {

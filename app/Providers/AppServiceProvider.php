@@ -11,8 +11,10 @@ use App\Repositories\ListRepository;
 use App\Repositories\UserRepository;
 use App\Services\JwtService;
 use App\Services\ListService;
+use App\Services\SwaggerService as CustomSwaggerService;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
+use RonasIT\AutoDoc\Services\SwaggerService as BaseSwaggerService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(UserRepositoryContract::class, UserRepository::class);
         $this->app->bind(ListRepositoryContract::class, ListRepository::class);
+        $this->app->bind(BaseSwaggerService::class, CustomSwaggerService::class);
     }
 
     /**

@@ -17,6 +17,8 @@ use Illuminate\Validation\Rule;
  * @description
  * Выполнение элемента списка
  *
+ * @swaggerIgnore id,complete_user_id
+ *
  * @_200 Успешная операция
  *
  * @_422 Ошибка валидации данных

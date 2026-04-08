@@ -13,6 +13,8 @@ use App\Rules\CheckCanDeleteList;
  * @description
  * Удалить список для всех пользователей
  *
+ * @swaggerIgnore id
+ *
  * @_200 Успешная операция
  *
  * @_422 Ошибка валидации данных

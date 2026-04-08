@@ -14,6 +14,8 @@ use App\Rules\CheckCanEditListByItem;
  * @description
  * Удаление элемента списка
  *
+ * @swaggerIgnore id
+ *
  * @_200 Успешная операция
  *
  * @_422 Ошибка валидации данных
