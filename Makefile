@@ -3,6 +3,9 @@
 t:
 	php artisan test
 
+t-local:
+	powershell -Command "$$env:DB_HOST='localhost'; php artisan test"
+
 stan:
 	./vendor/bin/phpstan analyse
 

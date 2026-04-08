@@ -13,7 +13,7 @@ final class JwtTokenData extends Data
     public function __construct(
         public readonly string $userId,
         public readonly JwtTokenType $type,
-        public readonly int $time = 3600,
+        public readonly int $time = 900,
         public readonly ?string $jti = null,
     ) {
     }

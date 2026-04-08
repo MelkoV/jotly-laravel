@@ -84,6 +84,9 @@
 - Tests:
   - `php artisan test`
   - `make t`
+  - preferred local command in this workspace: `make t-local`
+  - equivalent PowerShell command:
+    `$env:DB_HOST='localhost'; php artisan test`
 - Full local CI-style check:
   - `make ci`
 - Static analysis:
@@ -157,4 +160,5 @@
 ## Environment Caveats
 
 - In this workspace, `git` commands may fail in sandboxed runs because the repository is marked as a dubious ownership directory for the current user context.
+- In this workspace, tests may fail to connect to PostgreSQL if `DB_HOST` resolves to `host.docker.internal`. For local PowerShell runs, prefer `$env:DB_HOST='localhost'; php artisan test`.
 - PowerShell profile output currently emits an `oh-my-posh` warning before command results. Ignore that noise when inspecting command output.

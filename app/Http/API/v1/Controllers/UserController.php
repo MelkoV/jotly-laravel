@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 /** @todo change-password */
-/** @todo logout */
 
 final class UserController extends Controller
 {
@@ -49,6 +48,17 @@ final class UserController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
         return $this->responseUserDataWithTokens($user);
+    }
+
+    public function logout(): Response
+    {
+        return response()
+            ->noContent()
+            ->cookie(Cookie::forget(
+                name: \Config::string('jwt.cookie.name'),
+                path: '/',
+                domain: \Config::string('jwt.cookie.domain'),
+            ));
     }
 
     /**

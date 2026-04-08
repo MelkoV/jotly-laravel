@@ -399,4 +399,25 @@ class UserApiTest extends TestCase
             ->missing('errors')
         )->assertCookie('refresh_token');
     }
+
+    public function test_logout_without_refresh_token_cookie(): void
+    {
+        $response = $this->post('/api/v1/user/logout');
+
+        $response->assertNoContent();
+        $response->assertCookieExpired(config('jwt.cookie.name'));
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function test_logout_with_refresh_token_cookie(): void
+    {
+        $response = $this
+            ->withCredentials()
+            ->withUnencryptedCookie(config('jwt.cookie.name'), $this->getJwtToken(tokenType: JwtTokenType::Refresh))
+            ->post('/api/v1/user/logout');
+
+        $response->assertNoContent();
+        $response->assertCookieExpired(config('jwt.cookie.name'));
+        $this->assertSame('', $response->getContent());
+    }
 }

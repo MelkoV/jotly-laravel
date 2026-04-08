@@ -12,6 +12,7 @@ Route::group([
     Route::prefix('/user')->group(function () {
         Route::post('/sign-up', [\App\Http\API\v1\Controllers\UserController::class, 'signUp']);
         Route::post('/sign-in', [\App\Http\API\v1\Controllers\UserController::class, 'signIn']);
+        Route::post('/logout', [\App\Http\API\v1\Controllers\UserController::class, 'logout']);
         Route::middleware(\App\Http\Middleware\HandleRefreshJwtToken::class)->group(function () {
             Route::post('/refresh-token', [\App\Http\API\v1\Controllers\UserController::class, 'refreshToken']);
         });
@@ -38,4 +39,3 @@ Route::group([
     });
 
 })->name('api.');
-
