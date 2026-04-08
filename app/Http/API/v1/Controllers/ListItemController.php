@@ -13,7 +13,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ListItemController extends Controller
+final class ListItemController extends Controller
 {
     public function __construct(
         private readonly ListServiceContract $listService,

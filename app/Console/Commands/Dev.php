@@ -29,8 +29,7 @@ class Dev extends Command
      */
     public function handle(): int
     {
-        $model = ListItem::query()->where('id', '019c9a5f-2a1b-71aa-bd3e-3802596eb33b')->first();
-        print_r($model);
+        DB::select('');
         return 0;
     }
 }

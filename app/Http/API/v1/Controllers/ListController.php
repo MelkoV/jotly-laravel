@@ -17,7 +17,7 @@ use App\Http\API\v1\Requests\List\ViewRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ListController extends Controller
+final class ListController extends Controller
 {
     public function __construct(
         private readonly ListServiceContract $listService,
