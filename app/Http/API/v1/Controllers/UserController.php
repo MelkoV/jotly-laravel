@@ -13,17 +13,20 @@ use App\Exceptions\UserNotFoundException;
 use App\Http\API\v1\Requests\User\SignInRequest;
 use App\Http\API\v1\Requests\User\SignUpRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\HandleRefreshJwtToken;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 final class UserController extends Controller
 {
     public function __construct(
         private readonly UserServiceContract $userService,
-        private readonly JwtServiceContract $jwtService,
-    ) {
+        private readonly JwtServiceContract  $jwtService,
+    )
+    {
     }
 
     public function signUp(SignUpRequest $request): JsonResponse
@@ -65,21 +68,22 @@ final class UserController extends Controller
 
     private function responseUserDataWithTokens(UserData $user): JsonResponse
     {
-        return response()->json([
-            'user' => $user,
-            'token' => $this->jwtService->encode(
-                new JwtTokenData(
-                    userId: $user->id,
-                    type: JwtTokenType::Temporary
+        return response()
+            ->json([
+                'user' => $user,
+                'token' => $this->jwtService->encode(
+                    new JwtTokenData(
+                        userId: $user->id,
+                        type: JwtTokenType::Temporary
+                    )
                 )
-            ),
-            'refresh_token' => $this->jwtService->encode(
+            ])
+            ->cookie(Cookie::make(HandleRefreshJwtToken::COOKIE_NAME, $this->jwtService->encode(
                 new JwtTokenData(
                     userId: $user->id,
                     type: JwtTokenType::Refresh,
-                    time: 3600 * 24
+                    time: 3600 * 24 * 7
                 )
-            ),
-        ]);
+            ), minutes: 60 * 24 * 7));
     }
 }

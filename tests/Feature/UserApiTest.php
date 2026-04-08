@@ -156,9 +156,8 @@ class UserApiTest extends TestCase
                 ->whereType('id', 'string')
             )
             ->whereType('token', 'string')
-            ->whereType('refresh_token', 'string')
             ->missing('errors')
-        );
+        )->assertCookie('refresh_token');
     }
 
     public function test_sign_up_duplicate_email()
@@ -268,9 +267,8 @@ class UserApiTest extends TestCase
                 ->whereType('id', 'string')
             )
             ->whereType('token', 'string')
-            ->whereType('refresh_token', 'string')
             ->missing('errors')
-        );
+        )->assertCookie('refresh_token');
     }
 
     public function test_sign_in_incorrect_credentials()
@@ -378,19 +376,19 @@ class UserApiTest extends TestCase
 
     public function test_refresh_token_with_fake_token(): void
     {
-        $response = $this->withJwtToken('fake_token')->post('/api/v1/user/refresh-token');
+        $response = $this->withCredentials()->withUnencryptedCookie('refresh_token', 'fake_token')->post('/api/v1/user/refresh-token');
         $response->assertUnauthorized();
     }
 
     public function test_refresh_token_with_incorrect_token(): void
     {
-        $response = $this->withJwtToken()->post('/api/v1/user/refresh-token');
+        $response = $this->withCredentials()->withUnencryptedCookie('refresh_token', $this->getJwtToken())->post('/api/v1/user/refresh-token');
         $response->assertUnauthorized();
     }
 
     public function test_refresh_token_with_correct_data()
     {
-        $response = $this->withJwtToken($this->getJwtToken(tokenType: JwtTokenType::Refresh))->postJson('/api/v1/user/refresh-token');
+        $response = $this->withCredentials()->withUnencryptedCookie('refresh_token', $this->getJwtToken(tokenType: JwtTokenType::Refresh))->postJson('/api/v1/user/refresh-token');
         $response->assertOk();
 
         $response->assertJson(fn (AssertableJson $json) => $json
@@ -398,8 +396,7 @@ class UserApiTest extends TestCase
                 ->hasAll(['id', 'email', 'name', 'status', 'avatar'])
             )
             ->whereType('token', 'string')
-            ->whereType('refresh_token', 'string')
             ->missing('errors')
-        );
+        )->assertCookie('refresh_token');
     }
 }

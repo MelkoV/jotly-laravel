@@ -19,6 +19,8 @@ abstract class AbstractHandleJwtToken
 {
     abstract protected function getJwtTokenTokenType(): JwtTokenType;
 
+    abstract protected function getToken(Request $request): string;
+
     public function __construct(
         private readonly JwtServiceContract $jwtService
     ) {
@@ -27,16 +29,13 @@ abstract class AbstractHandleJwtToken
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(Request): (Response)  $next
+     * @param Closure(Request): (Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            $bearerToken = $request->bearerToken();
-            if (!$bearerToken) {
-                throw new JwtException('Bearer token is required.');
-            }
-            $tokenData = $this->decodeToken($bearerToken);
+            $token = $this->getToken($request);
+            $tokenData = $this->decodeToken($token);
             $user = User::query()->where('id', $tokenData->userId)->where('status', UserStatus::Active)->first();
             if (!$user) {
                 throw new JwtException('User not found');

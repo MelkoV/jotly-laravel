@@ -12,9 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->use([
+        /*$middleware->use([
             \RonasIT\AutoDoc\Http\Middleware\AutoDocMiddleware::class,
-        ]);
+        ]);*/
+        $middleware->append(\RonasIT\AutoDoc\Http\Middleware\AutoDocMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
