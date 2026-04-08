@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
+/** @todo change-password */
+/** @todo logout */
+
 final class UserController extends Controller
 {
     public function __construct(
@@ -68,6 +71,14 @@ final class UserController extends Controller
 
     private function responseUserDataWithTokens(UserData $user): JsonResponse
     {
+        $refreshToken = $this->jwtService->encode(
+            new JwtTokenData(
+                userId: $user->id,
+                type: JwtTokenType::Refresh,
+                time: 3600 * 24 * 7
+            )
+        );
+
         return response()
             ->json([
                 'user' => $user,
@@ -78,12 +89,16 @@ final class UserController extends Controller
                     )
                 )
             ])
-            ->cookie(Cookie::make(HandleRefreshJwtToken::COOKIE_NAME, $this->jwtService->encode(
-                new JwtTokenData(
-                    userId: $user->id,
-                    type: JwtTokenType::Refresh,
-                    time: 3600 * 24 * 7
-                )
-            ), minutes: 60 * 24 * 7));
+            ->cookie(Cookie::make(
+                name: \Config::string('jwt.cookie.name'),
+                value: $refreshToken,
+                minutes: 60 * 24 * 7,
+                path: '/',
+                domain: \Config::string('jwt.cookie.domain'),
+                secure: \Config::boolean('jwt.cookie.secure'),
+                httpOnly: true,
+                raw: false,
+                sameSite: \Config::string('jwt.cookie.same_site'),
+            ));
     }
 }

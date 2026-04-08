@@ -10,8 +10,6 @@ use Illuminate\Http\Request;
 
 class HandleRefreshJwtToken extends AbstractHandleJwtToken
 {
-    const string COOKIE_NAME = 'refresh_token';
-
     protected function getJwtTokenTokenType(): JwtTokenType
     {
         return JwtTokenType::Refresh;
@@ -22,9 +20,10 @@ class HandleRefreshJwtToken extends AbstractHandleJwtToken
      */
     protected function getToken(Request $request): string
     {
-        if (!$request->hasCookie(self::COOKIE_NAME)) {
+        $cookieName = \Config::string('jwt.cookie.name');
+        if (!$request->hasCookie($cookieName)) {
             throw new JwtException('Refresh token is required.');
         }
-        return (string)$request->cookie(self::COOKIE_NAME);
+        return (string)$request->cookie($cookieName);
     }
 }

@@ -17,8 +17,8 @@ class JwtService implements JwtServiceContract
 
     public function __construct()
     {
-        $this->alg = \Config::string('services.jwt.alg');
-        $this->key = \Config::string('services.jwt.key');
+        $this->alg = \Config::string('jwt.alg');
+        $this->key = \Config::string('jwt.key');
     }
 
     public function encode(JwtTokenData $data): string

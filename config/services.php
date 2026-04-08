@@ -35,9 +35,4 @@ return [
         ],
     ],
 
-    'jwt' => [
-        'key' => env('JWT_KEY'),
-        'alg' => env('JWT_ALG', 'HS256'),
-    ],
-
 ];
